@@ -24,7 +24,7 @@ mkdir -p $dir || error "Unable to create $dir"
 echo "Created $dir"
 
 test -f "$prog" || \
-    sed 's!day N *$!day '$DAY'!i' dayN.py > "$prog" || \
+    sed -E 's!([dD][aA][yY]) N *$!\1 '$DAY'!' dayN.py > "$prog" || \
     error "Unable to install $prog"
 
 chmod +x "$prog"
