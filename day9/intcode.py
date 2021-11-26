@@ -30,12 +30,16 @@ class IntCode:
         elif isinstance(mem, str):
             for i, v in enumerate(mem.split(",")):
                 self.mem[i] = int(v.strip())
+        # print("#### new IntCode")
+        # print(f"{self.to_str()}")
 
     def input(self, value: int):
         self.inp.append(value)
 
     def output(self) -> int:
-        return self.out.pop(0)
+        if self.out:
+            return self.out.pop(0)
+        return None
 
     def run(self) -> bool:
         """Continue execution of the intcode program from the current
@@ -45,8 +49,8 @@ class IntCode:
         op, addr = parse_instruction(self.mem[self.loc])
         while True:
             # print(
-            #     f"[{self.loc:02d}] op {op} mode {pos_mode} "
-            #     f"...{','.join([str(v) for v in mem[self.loc:self.loc+4]])} ..."
+            #     f"[{self.loc:02d}] '{self.mem[self.loc]}': op {op} mode {addr} "
+            #     f"...{self.to_str(self.loc, self.loc+4)} ..."
             # )
             if op == "01":
                 a, b, c = self.mem[self.loc + 1], self.mem[self.loc + 2], self.mem[self.loc + 3]
@@ -116,8 +120,8 @@ class IntCode:
                 self.done = True
                 break
             else:
-                raise RuntimeError(f"unrecognized op '{digits}'")
-            op, pos_mode = parse_instruction(self.mem[self.loc])
+                raise RuntimeError(f"unrecognized op '{op}'")
+            op, addr = parse_instruction(self.mem[self.loc])
 
         # print(f"---- {','.join([str(v) for v in self.mem])}")
         return self.done
@@ -137,6 +141,14 @@ class IntCode:
             raise ValueError("immediate mode for assignment address")
         elif addr_mode == ADDR_RELATIVE: # relative mode
             self.mem[self.base + param] = value
+
+    def to_str(self, start: int = 0, end: int = 0):
+        """Return a string representation of the memory locations from start
+        to end (non-inclusive).
+        """
+        if end == 0:
+            end = max(self.mem.keys()) + 1
+        return ", ".join([str(self.mem[v]) for v in range(start, end)])
 
 
 def parse_instruction(value: int) -> tuple[str, tuple[bool]]:
@@ -203,7 +215,7 @@ def test_engine():
     assert ok
     assert proc.mem[7] == 72
 
-    # multiplcation of values read from input
+    # multiplication of values read from input
     proc = IntCode("3,15,3,16,2,15,16,17,4,17,99")
     proc.input(3)
     proc.input(17)
@@ -212,6 +224,15 @@ def test_engine():
     assert proc.mem[17] == 51
     assert proc.output() == 51
 
+    # multiplication of values read from input to relative locations
+    proc = IntCode("109,20,203,10,203,11,22202,10,11,12,204,12,99")
+    proc.input(3)
+    proc.input(17)
+    ok = proc.run()
+    assert ok
+    assert proc.base == 20
+    assert proc.mem[32] == 51
+    assert proc.output() == 51
 
 if __name__ == '__main__':
     test_engine()
