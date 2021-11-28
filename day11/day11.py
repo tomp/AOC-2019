@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-#  Advent of Code 2019 - Day N
+#  Advent of Code 2019 - Day 11
 #
 from typing import Sequence
 from pathlib import Path
