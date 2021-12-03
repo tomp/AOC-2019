@@ -2,7 +2,10 @@
 #
 #  Advent of Code 2019 - Day N
 #
-from typing import Sequence
+from typing import Sequence, Any
+from collections import defaultdict
+from dataclasses import dataclass
+import math
 from pathlib import Path
 
 INPUTFILE = "input.txt"
@@ -26,6 +29,9 @@ def sample_input() -> Lines:
 
 def load_input(infile: str) -> Lines:
     return filter_blank_lines(Path(infile).open())
+
+def load_text(text: str) -> Lines:
+    return filter_blank_lines(text.split("\n"))
 
 def filter_blank_lines(lines: Lines) -> Lines:
     return [line.strip() for line in lines if line.strip()]
@@ -56,9 +62,9 @@ def parse_sections(lines: Lines) -> Sections:
 
 # Solution
 
-def solve(lines: Lines) -> Any:
+def solve(lines: Lines) -> int:
     """Solve the problem."""
-    pass
+    return 0
 
 
 # PART 1
@@ -96,7 +102,7 @@ def part1(lines: Lines) -> None:
 
 if __name__ == "__main__":
     example1()
-    lines = load_input(INPUTFILE)
-    part1(lines)
+    input_lines = load_input(INPUTFILE)
+    part1(input_lines)
     # example2()
-    # part2(lines)
+    # part2(input_lines)
