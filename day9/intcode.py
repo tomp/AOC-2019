@@ -2,7 +2,7 @@
 """
 Intcode processor simulator
 """
-from typing import Optional, Any
+from typing import Optional, Union
 from collections import defaultdict
 from copy import copy
 
@@ -16,7 +16,7 @@ class IntCode:
     Each processor has its own input and output streams (lists).
     """
 
-    def __init__(self, mem: Any):
+    def __init__(self, mem: Union[str, list[int]]):
         self.mem = defaultdict(int)
         self.inp = [] # input stream
         self.out = [] # output stream
